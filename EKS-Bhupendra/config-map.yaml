@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: robot-shop-config
+data:
+  # --- Redis Connections ---
+  REDIS_HOST: "redis"
+
+  # --- Catalogue Connections ---
+  CATALOGUE_HOST: "catalogue"
+  CATALOGUE_URL: "http://catalogue:8080"
+
+  # --- MongoDB Database Connections ---
+  MONGO_URL_CATALOGUE: "mongodb://mongodb:27017/catalogue"
+  MONGO_URL_USER: "mongodb://mongodb:27017/users"
+
+  # --- MySQL Database Connections ---
+  DB_HOST: "mysql"
+  PDO_URL: "mysql:host=mysql;dbname=ratings;charset=utf8mb4"
+
+  # --- Cart Connections ---
+  CART_HOST: "cart"
+  CART_ENDPOINT: "cart:8080"
+
+  # --- User Connections ---
+  USER_HOST: "user"
+
+  # --- Messaging (RabbitMQ) & Gateways ---
+  AMQP_HOST: "rabbitmq"
+  PAYMENT_GATEWAY: "https://paypal.com/"
+  PAYMENT_DELAY_MS: "0"

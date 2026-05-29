@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: robot-shop-ingress
+  annotations:
+    # --- AWS ALB Configuration Annotations ---
+    # Tells EKS to use the AWS Load Balancer Controller to create an ALB
+    kubernetes.io/ingress.class: alb
+    
+    # Creates a public, internet-facing load balancer (default is internal)
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    
+    # Routes traffic directly to Pod IPs instead of NodePorts (faster & recommended!)
+    alb.ingress.kubernetes.io/target-type: ip
+    
+    # Listens on public HTTP port 80
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web               # Name of your frontend service
+                port:
+                  number: 8080          # Port of your frontend service

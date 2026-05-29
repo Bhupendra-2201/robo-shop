@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dispatch-deployment # DEPLOYMENT  Name of the Deployment resource itself.
+
+  labels: # [DEPLOYMENT LABELS]: Purely informational tags on the Deployment.
+    app: dispatch-application # Optional. Used only for organizing/filtering your deployments.
+
+spec:
+  replicas: 1
+
+  selector: # [THE BRIDGE - THE FINDER]
+    matchLabels: # Tells the Deployment: "Manage any pods that have this label."
+      app: dispatch # MUST EXACTLY MATCH the label in spec.template.metadata.labels below!
+
+  template: # [THE POD BLUEPRINT]
+    metadata:
+      labels: # [POD LABELS]: The actual tags stamped onto every Pod created.
+        app: dispatch # Crucial! Used by:
+          # 1. The selector above (to manage the pod).
+          # 2. Your K8s Service (to route traffic to this pod).
+
+    spec:
+      containers:
+        - name: dispatch-app # CONTAINER NAME]: Name of the specific running container inside the Pod.
+            # If you run multiple containers in 1 pod, they must have unique names here.
+
+          image: robotshop/rs-dispatch:latest
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "128Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"

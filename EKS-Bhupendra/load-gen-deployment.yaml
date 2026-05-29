@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: load-gen-deployment # DEPLOYMENT  Name of the Deployment resource itself.
+
+  labels: # [DEPLOYMENT LABELS]: Purely informational tags on the Deployment.
+    app: load-gen-application # Optional. Used only for organizing/filtering your deployments.
+
+spec:
+  replicas: 1
+
+  selector: # [THE BRIDGE - THE FINDER]
+    matchLabels: # Tells the Deployment: "Manage any pods that have this label."
+      app: load-gen # MUST EXACTLY MATCH the label in spec.template.metadata.labels below!
+
+  template: # [THE POD BLUEPRINT]
+    metadata:
+      labels: # [POD LABELS]: The actual tags stamped onto every Pod created.
+        app: load-gen # Crucial! Used by the selector above.
+
+    spec:
+      containers:
+        - name: load-gen # CONTAINER NAME
+          image: robotshop/rs-load:latest
+          env:
+            - name: HOST
+              value: "http://web:8080/"
+            - name: NUM_CLIENTS
+              value: "15"
+            - name: SILENT
+              value: "1"
+            - name: ERROR
+              value: "1"
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shipping-deployment
+  labels:
+    app: shipping-application
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shipping
+  template:
+    metadata:
+      labels:
+        app: shipping
+    spec:
+      containers:
+        - name: shipping
+          image: robotshop/rs-shipping:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: robot-shop-config
+                  key: DB_HOST
+            - name: CART_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: robot-shop-config
+                  key: CART_ENDPOINT
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "350Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"

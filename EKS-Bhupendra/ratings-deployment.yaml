@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ratings
+  labels:
+    app: ratings
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      name: http
+  selector:
+    app: ratings
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ratings-deployment
+  labels:
+    app: ratings-application
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ratings
+  template:
+    metadata:
+      labels:
+        app: ratings
+    spec:
+      containers:
+        - name: ratings
+          image: robotshop/rs-ratings:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: CATALOGUE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: robot-shop-config
+                  key: CATALOGUE_URL
+            - name: PDO_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: robot-shop-config
+                  key: PDO_URL
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "512Mi"
