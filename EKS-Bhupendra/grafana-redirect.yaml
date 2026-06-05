@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-redirect-service
+  namespace: e-commerce
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: grafana-redirect-service
+  namespace: e-commerce
+subsets:
+  - addresses:
+      - ip: 192.168.93.205
+    ports:
+      - port: 3000

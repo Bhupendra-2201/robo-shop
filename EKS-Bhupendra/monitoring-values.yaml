@@ -1,0 +1,29 @@
+# This configures the prometheus-stack to deploy Prometheus and Grafana
+prometheus-operator:
+  enabled: true
+
+# Configures our central Grafana instance
+grafana:
+  enabled: true
+  adminPassword: "wQCSWIAe96xVdPDytULfJXjKtmrHFHKn5lEtviHz"
+  # Auto-registers Loki as a data source inside Grafana
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      access: proxy
+      url: http://loki:3100
+      version: 1
+      isDefault: false
+
+# Configures Prometheus
+prometheus:
+  prometheusSpec:
+    # Adjust resource limits so it runs smoothly on your Spot pool
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
+
